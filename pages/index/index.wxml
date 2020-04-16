@@ -1,0 +1,34 @@
+<!--index.wxml-->
+<view class="stv_container stv_box">
+
+  <!--tabs-->
+  <view class="stv_row stv_tabs {{stvTabBottom ? 'stv_tabs_bottom' : 'stv_tabs_top'}}" style="height: {{stvTabHeight || '100'}}{{stvTabHeightUnit || 'rpx'}}">
+    <view class="stv_col stv_tab_item" wx:key="_stv_tabs" wx:for="{{stvTabs}}" wx:for-index="idx" wx:for-item="tab">
+      <button class="stv_tab_btn {{idx == stvCurrent || (idx == 0 && !stvCurrent) ? 'stv_active' : ''}}" data-index="{{idx}}" bindtap="stvOnTabTap">{{tab}}</button>
+    </view>
+    <view hidden="{{stvHiddenTabLine}}" class="stv_line {{stvTabBottom ? 'stv_line_top' : 'stv_line_bottom'}} {{stvAnimateLine ? 'animate': ''}}" style="width: {{stvLineWidth}}px;left: {{stvOffset}}px"></view>
+  </view>
+
+  <!--内容-->
+  <swiper class="stv_swiper stv_box {{stvTabBottom ? 'has_stv_footer' :  'has_stv_header'}}" indicator-dots="{{stvIndicatorDots}}" autoplay="{{stvAutoplay}}"
+      interval="{{stvInterval}}" duration="{{stvDuration}}" current="{{stvCurrent || 0}}" circular="{{stvLoop}}" bindchange="stvOnChange"
+      bindtouchstart="stvOnTouchStart" bindtouchend="stvOnTouchEnd"
+    >
+    <!--Camera-->
+    <swiper-item bindtouchmove="stvOnTouchMove" class="stv_swiper_item stv_box" style="background: white;">
+      <camera device-position="back" flash="off" binderror="error" style="width: 100%; height: 300px;"></camera>
+      <view class="btn-area">
+        <button type="primary" bindtap="take2">开始拍照</button>
+      </view>
+      <view class="preview">预览</view>
+      <image wx:if="{{src}}" mode="widthFix" src="{{src}}"></image>
+    </swiper-item>
+
+    <!--Photos-->
+    <swiper-item bindtouchmove="stvOnTouchMove" class="stv_swiper_item stv_box" style="background: white">
+      <view class="preview">预览</view>
+      <image wx:if="{{src}}" mode="widthFix" src="{{src}}"></image>
+    </swiper-item>
+  </swiper>
+
+</view>
