@@ -124,3 +124,19 @@
   flex-direction: column;
   width: 100%;
 }
+
+.img_list{
+	width: 100vw;
+	display: flex;
+	display: -webkit-flex;
+  padding: 0 20rpx;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  -webkit-flex-wrap:wrap;
+}
+.img_list .img_li,
+
+.img_list .img_li image{
+  width: 100%;
+  height: 100%;
+}

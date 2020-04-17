@@ -1,5 +1,7 @@
 Page({
   data: {
+    num: 0,
+    imglist: [],
     stvTabs: ["Camera", "Photos"],
     stvTabHeight: 100, //单位rpx
     stvTabHeightUnit: 'rpx', //单位 rpx
@@ -21,8 +23,15 @@ Page({
 
   stvOnChange: function(e) {
     this.stvOnTabTap(e.detail.current);
-    var id = this.data.id
+    var id = this.data.id;
     clearInterval(id);
+    this.setData ({
+      num: this.data.num + 1
+    });
+    console.log("切换Tab")
+    if (this.data.num % 2 == 1) {
+      this.showPhoto()
+    }
   },
 
   stvOnTabTap: function (e) {
@@ -132,29 +141,49 @@ Page({
   //   })
   // },
 
-  take2: function(e){
-    var num = this.data.page
-    // var time = 1
+  takePhoto: function(e){
+    // var num = this.data.page
+    var time = 1
     var id = setInterval(function(){
-      // console.log("拍照", time, "次")
-      // time ++;
-      if (num%2 == 1){
-        const ctx = wx.createCameraContext()
-        ctx.takePhoto({
-          quality: "high",
-          success: (res) => {
-            this.setData({
-              src: res.tempImagePath
-            })
-          }
-        })
-      }
+      const ctx = wx.createCameraContext()
+      ctx.takePhoto({
+        quality: "high",
+        success: (res) => {
+          console.log("拍照", time, "次")
+          time ++;
+          // var tempFilePaths = res.tempFilePaths
+          // this.setData({
+          //   imglist: this.data.imglist.concat(tempFilePaths)
+          // })
+          const fs = wx.getFileSystemManager()
+          fs.saveFile({
+            tempFilePath: res.tempImagePath,
+            success: (res) => {
+              console.log('图片缓存成功', res.savedFilePath)
+              this.setData({
+                imglist: this.data.imglist.concat(res.savedFilePath)
+              })
+              console.log(this.data.imglist)
+              // wx.setStorageSync('image_cache', res.savedFilePath)
+            }
+          })
+        }
+      })
     }, 1000);
     this.setData({
       id:id
     })
   },
 
+  showPhoto: function(e) {
+    const path = wx.getStorageSync('image_cache')
+    if (path != null) {
+      console.log('path====', path)
+      this.setData({
+        image_filepath: path
+      })
+    }
+},
   onLoad: function() {
     //初始化数据
     let {stvTabs} = this.data;
