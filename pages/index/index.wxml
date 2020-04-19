@@ -16,22 +16,22 @@
     >
     <!--Camera-->
     <swiper-item bindtouchmove="stvOnTouchMove" class="stv_swiper_item stv_box" style="background: white;">
-      <camera device-position="back" flash="off" binderror="error" style="width: 100%; height: 300px;"></camera>
+      <camera device-position="back" flash="off" binderror="error" style="width: 100%; height: 500rpx;"></camera>
       <view class="btn-area">
         <button type="primary" bindtap="takePhoto">开始拍照</button>
       </view>
-      <view class="preview">预览</view>
-      <image wx:if="{{src}}" mode="widthFix" src="{{src}}"></image>
     </swiper-item>
 
     <!--Photos-->
     <swiper-item bindtouchmove="stvOnTouchMove" class="stv_swiper_item stv_box" style="background: white">
-      <view class="preview">相册</view>
-      <view class="img_list">
-        <view>
-          <image src="{{image_filepath}}"></image>
+      <view class="preview_word">相册</view>
+      <block wx:for="{{image_filepath}}">
+        <!-- <view>{{item}}</view> -->
+        <view class="preview_image">
+          <image style="width: 375rpx; height: 250rpx; background-color: #eeeeee;" src="../cat.jpg" mode="aspectFit"></image>
         </view>
-      </view>
+        <!-- <image src="{{item}}"></image> -->
+      </block>
     </swiper-item>
   </swiper>
 

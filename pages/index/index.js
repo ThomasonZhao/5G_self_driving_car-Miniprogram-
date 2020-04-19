@@ -1,7 +1,7 @@
 Page({
   data: {
     num: 0,
-    imglist: [],
+    imglist: [1, 2, 3, 6, 9],
     stvTabs: ["Camera", "Photos"],
     stvTabHeight: 100, //单位rpx
     stvTabHeightUnit: 'rpx', //单位 rpx
@@ -21,6 +21,14 @@ Page({
     stvOffset: 0
   },
 
+  onPullDownRefresh: function () {
+    console.log("下拉刷新开始！");
+    setTimeout(function () {
+      wx.stopPullDownRefresh();
+      console.log("下拉刷新结束！");
+    }, 1000)
+  },
+
   stvOnChange: function(e) {
     this.stvOnTabTap(e.detail.current);
     var id = this.data.id;
@@ -31,6 +39,9 @@ Page({
     console.log("切换Tab")
     if (this.data.num % 2 == 1) {
       this.showPhoto()
+      this.setData({
+        imglist: []
+      })
     }
   },
 
@@ -143,7 +154,9 @@ Page({
 
   takePhoto: function(e){
     // var num = this.data.page
-    var time = 1
+    let self = this;
+    var time = 1;
+    var list = self.data.imglist
     var id = setInterval(function(){
       const ctx = wx.createCameraContext()
       ctx.takePhoto({
@@ -151,22 +164,19 @@ Page({
         success: (res) => {
           console.log("拍照", time, "次")
           time ++;
-          // var tempFilePaths = res.tempFilePaths
+          list.push(res.tempImagePath)
           // this.setData({
-          //   imglist: this.data.imglist.concat(tempFilePaths)
+          //   tempFilePaths: tempFilePaths;
           // })
-          const fs = wx.getFileSystemManager()
-          fs.saveFile({
-            tempFilePath: res.tempImagePath,
-            success: (res) => {
-              console.log('图片缓存成功', res.savedFilePath)
-              this.setData({
-                imglist: this.data.imglist.concat(res.savedFilePath)
-              })
-              console.log(this.data.imglist)
-              // wx.setStorageSync('image_cache', res.savedFilePath)
-            }
-          })
+          // console.log(imglist)
+          // const fs = wx.getFileSystemManager()
+          // fs.saveFile({
+          //   tempFilePath: res.tempImagePath,
+          //   success: (res) => {
+          //     console.log('图片缓存成功', res.savedFilePath)
+          //     wx.setStorageSync('imgindex', list)
+          //   }
+          // })
         }
       })
     }, 1000);
@@ -175,12 +185,22 @@ Page({
     })
   },
 
+  // append: function(e) {
+  //   let self = this;
+  //   var imglist = this.data.imglist;
+  //   self.setData({
+  //     imglist: imglist.concat(e)
+  //   })
+  // },
+
   showPhoto: function(e) {
-    const path = wx.getStorageSync('image_cache')
+    const path = wx.getStorageSync('imgindex');
+    var list = this.data.imglist;
+    console.log(list);
     if (path != null) {
-      console.log('path====', path)
+      console.log('path====', list)
       this.setData({
-        image_filepath: path
+        image_filepath: list
       })
     }
 },
