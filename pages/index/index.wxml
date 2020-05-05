@@ -28,7 +28,7 @@
       <block wx:for="{{image_filepath}}">
         <!-- <view>{{item}}</view> -->
         <view class="preview_image">
-          <image style="width: 375rpx; height: 250rpx; background-color: #eeeeee;" src="../cat.jpg" mode="aspectFit"></image>
+          <image style="width: 375rpx; height: 250rpx; background-color: #ffffff;" src="{{item}}" mode="aspectFit"></image>
         </view>
         <!-- <image src="{{item}}"></image> -->
       </block>

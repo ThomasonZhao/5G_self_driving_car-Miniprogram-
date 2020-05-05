@@ -130,6 +130,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  margin-top: 30rpx;
   /* margin: 0 0 20rpx 0; */
 }
 

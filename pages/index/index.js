@@ -1,7 +1,7 @@
 Page({
   data: {
     num: 0,
-    imglist: [1, 2, 3, 6, 9],
+    imglist: [],
     stvTabs: ["Camera", "Photos"],
     stvTabHeight: 100, //单位rpx
     stvTabHeightUnit: 'rpx', //单位 rpx
@@ -165,18 +165,8 @@ Page({
           console.log("拍照", time, "次")
           time ++;
           list.push(res.tempImagePath)
-          // this.setData({
-          //   tempFilePaths: tempFilePaths;
-          // })
-          // console.log(imglist)
-          // const fs = wx.getFileSystemManager()
-          // fs.saveFile({
-          //   tempFilePath: res.tempImagePath,
-          //   success: (res) => {
-          //     console.log('图片缓存成功', res.savedFilePath)
-          //     wx.setStorageSync('imgindex', list)
-          //   }
-          // })
+          self.setStoragePhoto(res.tempImagePath)
+          self.uploadPhoto()
         }
       })
     }, 1000);
@@ -185,13 +175,39 @@ Page({
     })
   },
 
-  // append: function(e) {
-  //   let self = this;
-  //   var imglist = this.data.imglist;
-  //   self.setData({
-  //     imglist: imglist.concat(e)
-  //   })
-  // },
+  setStoragePhoto: function(localpaths) {
+    wx.setStorageSync('index', localpaths)
+    console.log('缓存成功')
+  },
+
+  uploadPhoto: function(e) {
+    console.log('开始上传')
+    const localpath = wx.getStorageSync('index')
+    wx.uploadFile({
+      filePath: localpath,
+      name: 'image',
+      url: 'http://192.168.0.103:8000/save-img/',
+      success: (res) => {
+        console.log('上传成功')
+        console.log(res.data)
+        console.log(res)
+      },
+      fail: (res) => {
+        console.log('上传失败')
+        console.log(res.data)
+        console.log(res)
+      },
+    })
+  },
+
+  downloadPhoto: function(e) {
+    wx.downloadFile({
+      url: 'http://192.168.1.103/users/put-img',
+      success: (res) => {
+        console.log('下载成功')
+      },
+    })
+  },
 
   showPhoto: function(e) {
     const path = wx.getStorageSync('imgindex');
